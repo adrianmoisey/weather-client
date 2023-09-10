@@ -33,6 +33,9 @@ func NewClient(apiKey string, city string, unit string) *Client {
 		city:   city,
 		unit:   unit,
 	}
+	if c.unit == "" {
+		c.unit = "metric"
+	}
 	c.initialize()
 	return c
 }
