@@ -17,8 +17,8 @@ func TestLocation(t *testing.T) {
 	httpmock.RegisterResponder("GET", locationURL+api_key+"&q="+test_city,
 		httpmock.NewStringResponder(200, `[{"lat": 0.1337, "lon": -1337.0, "country": "test-country", "state": "test-state"}]`))
 
-	client := NewClient(api_key, test_city, "metric")
-	location, err := client.Location.FetchLatLonForCity()
+	client := NewClient(api_key, "metric")
+	location, err := client.Location.FetchLatLonForCity(test_city)
 
 	assert.Equal(t, err, nil)
 
@@ -38,8 +38,8 @@ func TestLocationFail(t *testing.T) {
 	httpmock.RegisterResponder("GET", locationURL+api_key+"&q="+test_city,
 		httpmock.NewStringResponder(200, `[]`))
 
-	client := NewClient(api_key, test_city, "metric")
-	location, err := client.Location.FetchLatLonForCity()
+	client := NewClient(api_key, "metric")
+	location, err := client.Location.FetchLatLonForCity(test_city)
 
 	var emptyLocation Location
 

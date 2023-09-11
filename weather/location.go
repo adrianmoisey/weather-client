@@ -14,12 +14,12 @@ type Location struct {
 	State     string  `json:"state"`
 }
 
-func (s *LocationService) FetchLatLonForCity() (Location, error) {
+func (s *LocationService) FetchLatLonForCity(city string) (Location, error) {
 	var err error
 	var locations []Location
 	var location Location
 
-	url := locationURL + s.client.apiKey + "&q=" + s.client.city
+	url := locationURL + s.client.apiKey + "&q=" + city
 
 	res, err := s.client.NewRequest(url)
 	json.Unmarshal(res, &locations)

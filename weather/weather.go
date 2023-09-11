@@ -12,10 +12,7 @@ const (
 
 type Client struct {
 	apiKey string
-	city   string
 	unit   string
-
-	client *http.Client
 
 	common service
 
@@ -27,10 +24,9 @@ type service struct {
 	client *Client
 }
 
-func NewClient(apiKey string, city string, unit string) *Client {
+func NewClient(apiKey string, unit string) *Client {
 	c := &Client{
 		apiKey: apiKey,
-		city:   city,
 		unit:   unit,
 	}
 	if c.unit == "" {
@@ -41,8 +37,6 @@ func NewClient(apiKey string, city string, unit string) *Client {
 }
 
 func (c *Client) initialize() {
-	c.client = &http.Client{}
-
 	c.common.client = c
 
 	c.Temperature = (*TemperatureService)(&c.common)
@@ -55,7 +49,13 @@ func (c *Client) NewRequest(url string) ([]byte, error) {
 	if err != nil {
 		return body, err
 	}
+
+	if resp.StatusCode == 401 {
+		return body, invalidAPIKey
+	}
+
 	body, err = io.ReadAll(resp.Body)
+
 	if err != nil {
 		return body, err
 	}

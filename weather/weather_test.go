@@ -7,9 +7,8 @@ import (
 )
 
 func TestNewClient(t *testing.T) {
-	client := NewClient("apikey", "atlanta", "")
+	client := NewClient("apikey", "metric")
 
-	assert.Equal(t, client.city, "atlanta")
 	assert.Equal(t, client.unit, "metric")
 
 }
