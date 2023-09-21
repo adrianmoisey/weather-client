@@ -3,6 +3,8 @@ package weather
 import (
 	"io"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 const (
@@ -51,7 +53,9 @@ func (c *Client) NewRequest(url string) ([]byte, error) {
 	}
 
 	if resp.StatusCode == 401 {
-		return body, invalidAPIKey
+		cause := errors.New(invalidAPIKey)
+
+		return body, errors.WithStack(cause)
 	}
 
 	body, err = io.ReadAll(resp.Body)

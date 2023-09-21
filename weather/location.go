@@ -2,6 +2,8 @@ package weather
 
 import (
 	"encoding/json"
+
+	"github.com/pkg/errors"
 )
 
 type LocationService service
@@ -30,7 +32,8 @@ func (s *LocationService) FetchLatLonForCity(city string) (Location, error) {
 
 	locationLength := len(locations)
 	if locationLength == 0 {
-		return location, errorNoCityFound
+		cause := errors.New(errorNoCityFound)
+		return location, errors.WithStack(cause)
 	} else {
 		location = locations[0]
 	}
