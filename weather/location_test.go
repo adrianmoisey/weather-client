@@ -20,7 +20,7 @@ func TestLocation(t *testing.T) {
 	client := NewClient(api_key, "metric")
 	location, err := client.Location.FetchLatLonForCity(test_city)
 
-	assert.Equal(t, err, nil)
+	assert.NoError(t, err)
 
 	assert.Equal(t, location.Latitude, 0.1337)
 	assert.Equal(t, location.Longitude, -1337.0)
@@ -41,8 +41,6 @@ func TestLocationFail(t *testing.T) {
 	client := NewClient(api_key, "metric")
 	location, err := client.Location.FetchLatLonForCity(test_city)
 
-	var emptyLocation Location
-
 	assert.EqualError(t, err, errorNoCityFound)
-	assert.Equal(t, location, emptyLocation)
+	assert.Nil(t, location)
 }
