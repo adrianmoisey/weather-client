@@ -1,4 +1,4 @@
 package weather
 
-var errorNoCityFound = "no match found"
-var invalidAPIKey = "Invalid API key"
+const errorNoCityFound = "no match found"
+const invalidAPIKey = "Invalid API key"
