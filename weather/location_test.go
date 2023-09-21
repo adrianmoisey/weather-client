@@ -43,6 +43,6 @@ func TestLocationFail(t *testing.T) {
 
 	var emptyLocation Location
 
-	assert.Equal(t, err, errorNoCityFound)
+	assert.EqualError(t, err, errorNoCityFound)
 	assert.Equal(t, location, emptyLocation)
 }

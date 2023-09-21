@@ -43,7 +43,7 @@ func TestTemperatureFail(t *testing.T) {
 
 	temperature, err := client.Temperature.FetchWeatherForCity(test_city)
 
-	assert.Equal(t, err, errorNoCityFound)
+	assert.EqualError(t, err, errorNoCityFound)
 
 	assert.Equal(t, temperature.Pressure, int32(0))
 	assert.Equal(t, temperature.Temperature, 0.0)
@@ -63,5 +63,5 @@ func TestTemperatureFailApiKey(t *testing.T) {
 
 	_, err := client.Temperature.FetchWeatherForCity(test_city)
 
-	assert.Equal(t, err, invalidAPIKey)
+	assert.EqualError(t, err, invalidAPIKey)
 }
