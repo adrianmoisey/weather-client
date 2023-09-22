@@ -3,6 +3,8 @@ package weather
 import (
 	"io"
 	"net/http"
+
+	"github.com/pkg/errors"
 )
 
 const (
@@ -43,21 +45,22 @@ func (c *Client) initialize() {
 	c.Location = (*LocationService)(&c.common)
 }
 
+// TODO Switch to using resty
 func (c *Client) NewRequest(url string) ([]byte, error) {
-	var body []byte
+
 	resp, err := http.Get(url)
 	if err != nil {
-		return body, err
+		return nil, err
 	}
 
 	if resp.StatusCode == 401 {
-		return body, invalidAPIKey
+		cause := errors.New(invalidAPIKey)
+		return nil, errors.WithStack(cause)
 	}
 
-	body, err = io.ReadAll(resp.Body)
-
+	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return body, err
+		return nil, err
 	}
 
 	return body, err

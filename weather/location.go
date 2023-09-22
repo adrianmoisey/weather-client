@@ -2,6 +2,8 @@ package weather
 
 import (
 	"encoding/json"
+
+	"github.com/pkg/errors"
 )
 
 type LocationService service
@@ -14,25 +16,25 @@ type Location struct {
 	State     string  `json:"state"`
 }
 
-func (s *LocationService) FetchLatLonForCity(city string) (Location, error) {
-	var err error
+func (s *LocationService) FetchLatLonForCity(city string) (*Location, error) {
 	var locations []Location
-	var location Location
 
 	url := locationURL + s.client.apiKey + "&q=" + city
 
 	res, err := s.client.NewRequest(url)
-	json.Unmarshal(res, &locations)
-
 	if err != nil {
-		return location, err
+		return nil, err
 	}
 
-	locationLength := len(locations)
-	if locationLength == 0 {
-		return location, errorNoCityFound
-	} else {
-		location = locations[0]
+	err = json.Unmarshal(res, &locations)
+	if err != nil {
+		return nil, err
 	}
-	return location, err
+
+	if len(locations) == 0 {
+		cause := errors.New(errorNoCityFound)
+		return nil, errors.WithStack(cause)
+	}
+
+	return &locations[0], nil
 }

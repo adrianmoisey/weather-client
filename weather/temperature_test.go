@@ -23,7 +23,7 @@ func TestTemperature(t *testing.T) {
 	client := NewClient(api_key, "metric")
 	temperature, err := client.Temperature.FetchWeatherForCity(test_city)
 
-	assert.Equal(t, err, nil)
+	assert.NoError(t, err)
 
 	assert.Equal(t, temperature.Pressure, int32(9999))
 	assert.Equal(t, temperature.Temperature, 13.37)
@@ -43,10 +43,8 @@ func TestTemperatureFail(t *testing.T) {
 
 	temperature, err := client.Temperature.FetchWeatherForCity(test_city)
 
-	assert.Equal(t, err, errorNoCityFound)
-
-	assert.Equal(t, temperature.Pressure, int32(0))
-	assert.Equal(t, temperature.Temperature, 0.0)
+	assert.EqualError(t, err, errorNoCityFound)
+	assert.Nil(t, temperature)
 }
 
 func TestTemperatureFailApiKey(t *testing.T) {
@@ -63,5 +61,5 @@ func TestTemperatureFailApiKey(t *testing.T) {
 
 	_, err := client.Temperature.FetchWeatherForCity(test_city)
 
-	assert.Equal(t, err, invalidAPIKey)
+	assert.EqualError(t, err, invalidAPIKey)
 }
