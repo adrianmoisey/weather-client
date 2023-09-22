@@ -42,5 +42,5 @@ func (s *TemperatureService) FetchWeatherForCity(city string) (*WeatherCondition
 	// This weather.Main stuff is weird, is there a better way to handle it?
 	main := &weather.Main
 
-	return main, err
+	return main, nil
 }
