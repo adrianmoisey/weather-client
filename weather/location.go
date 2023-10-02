@@ -6,8 +6,6 @@ import (
 	"github.com/pkg/errors"
 )
 
-type LocationService service
-
 type Location struct {
 	Name      string  `json:"name"`
 	Latitude  float64 `json:"lat"`
@@ -16,12 +14,13 @@ type Location struct {
 	State     string  `json:"state"`
 }
 
-func (s *LocationService) FetchLatLonForCity(city string) (*Location, error) {
+func (s *weatherClient) FetchLatLonForCity(city string) (*Location, error) {
 	var locations []Location
 
-	url := locationURL + s.client.apiKey + "&q=" + city
+	url := locationURL + s.apiKey + "&q=" + city
 
-	res, err := s.client.NewRequest(url)
+	// Resty
+	res, err := s.Fetch(url)
 	if err != nil {
 		return nil, err
 	}

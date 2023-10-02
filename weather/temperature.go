@@ -5,8 +5,6 @@ import (
 	"fmt"
 )
 
-type TemperatureService service
-
 type Weather struct {
 	Main WeatherConditions `json:"main"`
 }
@@ -16,20 +14,20 @@ type WeatherConditions struct {
 	Pressure    int32   `json:"pressure"`
 }
 
-func (s *TemperatureService) FetchWeatherForCity(city string) (*WeatherConditions, error) {
+func (s *weatherClient) FetchWeatherForCity(city string) (*WeatherConditions, error) {
 	var weather Weather
 
 	// Fetch the Latitide and Longitide for city
-	location, err := s.client.Location.FetchLatLonForCity(city)
+	location, err := s.FetchLatLonForCity(city)
 	if err != nil {
 		return nil, err
 	}
 
 	latlonURL := fmt.Sprintf("&lat=%v&lon=%v", location.Latitude, location.Longitude)
-	units := fmt.Sprintf("&units=%s", s.client.unit)
-	url := weatherURL + s.client.apiKey + units + latlonURL
+	units := fmt.Sprintf("&units=%s", s.unit)
+	url := weatherURL + s.apiKey + units + latlonURL
 
-	res, err := s.client.NewRequest(url)
+	res, err := s.Fetch(url)
 	if err != nil {
 		return nil, err
 	}

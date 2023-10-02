@@ -1,9 +1,7 @@
 package weather
 
 import (
-	"io"
-	"net/http"
-
+	"github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
 )
 
@@ -12,56 +10,47 @@ const (
 	weatherURL  = "https://api.openweathermap.org/data/2.5/weather?appid="
 )
 
-type Client struct {
+type weatherClient struct {
 	apiKey string
 	unit   string
 
-	common service
-
-	Temperature *TemperatureService
-	Location    *LocationService
+	httpClient *resty.Client
 }
 
-type service struct {
-	client *Client
+type WeatherConfig struct {
+	apiKey string
+	units  string "metric"
 }
 
-func NewClient(apiKey string, unit string) *Client {
-	c := &Client{
-		apiKey: apiKey,
-		unit:   unit,
+func NewClient(config WeatherConfig) (*weatherClient, error) {
+
+	if config.apiKey == "" {
+		cause := errors.New(apiKeyNotSupplied)
+		return nil, errors.WithStack(cause)
 	}
-	if c.unit == "" {
-		c.unit = "metric"
+
+	c := &weatherClient{
+		apiKey: config.apiKey,
+		unit:   config.units,
 	}
-	c.initialize()
-	return c
+	c.httpClient = resty.New()
+	return c, nil
 }
 
-func (c *Client) initialize() {
-	c.common.client = c
+func (c *weatherClient) Fetch(url string) ([]byte, error) {
 
-	c.Temperature = (*TemperatureService)(&c.common)
-	c.Location = (*LocationService)(&c.common)
-}
+	resp, err := c.httpClient.R().
+		EnableTrace().
+		Get(url)
 
-// TODO Switch to using resty
-func (c *Client) NewRequest(url string) ([]byte, error) {
-
-	resp, err := http.Get(url)
 	if err != nil {
 		return nil, err
 	}
 
-	if resp.StatusCode == 401 {
+	if resp.StatusCode() == 401 {
 		cause := errors.New(invalidAPIKey)
 		return nil, errors.WithStack(cause)
 	}
 
-	body, err := io.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
-	}
-
-	return body, err
+	return resp.Body(), err
 }
