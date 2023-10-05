@@ -18,20 +18,20 @@ type WeatherClient struct {
 }
 
 type WeatherConfig struct {
-	apiKey string
-	units  string "metric"
+	ApiKey string
+	Units  string "metric"
 }
 
 func NewClient(config WeatherConfig) (*WeatherClient, error) {
 
-	if config.apiKey == "" {
+	if config.ApiKey == "" {
 		cause := errors.New(apiKeyNotSupplied)
 		return nil, errors.WithStack(cause)
 	}
 
 	c := &WeatherClient{
-		apiKey: config.apiKey,
-		unit:   config.units,
+		apiKey: config.ApiKey,
+		unit:   config.Units,
 	}
 	c.httpClient = resty.New()
 	return c, nil

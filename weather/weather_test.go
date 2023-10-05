@@ -20,8 +20,8 @@ func TestMain(m *testing.M) {
 	testCity = "testville"
 
 	config := WeatherConfig{
-		apiKey: apiKey,
-		units:  "metric",
+		ApiKey: apiKey,
+		Units:  "metric",
 	}
 
 	testClient, _ = NewClient(config)
