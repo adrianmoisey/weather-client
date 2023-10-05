@@ -14,7 +14,7 @@ type Location struct {
 	State     string  `json:"state"`
 }
 
-func (s *weatherClient) FetchLatLonForCity(city string) (*Location, error) {
+func (s *WeatherClient) FetchLatLonForCity(city string) (*Location, error) {
 	var locations []Location
 
 	url := locationURL + s.apiKey + "&q=" + city

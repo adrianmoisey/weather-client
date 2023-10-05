@@ -14,7 +14,7 @@ type WeatherConditions struct {
 	Pressure    int32   `json:"pressure"`
 }
 
-func (s *weatherClient) FetchWeatherForCity(city string) (*WeatherConditions, error) {
+func (s *WeatherClient) FetchWeatherForCity(city string) (*WeatherConditions, error) {
 	var weather Weather
 
 	// Fetch the Latitide and Longitide for city

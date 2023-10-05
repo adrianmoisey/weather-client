@@ -12,7 +12,7 @@ var (
 	apiKey   string
 	testCity string
 
-	testClient *weatherClient
+	testClient *WeatherClient
 )
 
 func TestMain(m *testing.M) {

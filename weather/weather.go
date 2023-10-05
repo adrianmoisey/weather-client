@@ -10,7 +10,7 @@ const (
 	weatherURL  = "https://api.openweathermap.org/data/2.5/weather?appid="
 )
 
-type weatherClient struct {
+type WeatherClient struct {
 	apiKey string
 	unit   string
 
@@ -22,14 +22,14 @@ type WeatherConfig struct {
 	units  string "metric"
 }
 
-func NewClient(config WeatherConfig) (*weatherClient, error) {
+func NewClient(config WeatherConfig) (*WeatherClient, error) {
 
 	if config.apiKey == "" {
 		cause := errors.New(apiKeyNotSupplied)
 		return nil, errors.WithStack(cause)
 	}
 
-	c := &weatherClient{
+	c := &WeatherClient{
 		apiKey: config.apiKey,
 		unit:   config.units,
 	}
@@ -37,7 +37,7 @@ func NewClient(config WeatherConfig) (*weatherClient, error) {
 	return c, nil
 }
 
-func (c *weatherClient) Fetch(url string) ([]byte, error) {
+func (c *WeatherClient) Fetch(url string) ([]byte, error) {
 
 	resp, err := c.httpClient.R().
 		EnableTrace().
