@@ -14,10 +14,10 @@ func TestLocation(t *testing.T) {
 
 	location, err := testClient.FetchLatLonForCity(testCity)
 
-	assert.Equal(t, location.Latitude, 0.1337)
-	assert.Equal(t, location.Longitude, -1337.0)
-	assert.Equal(t, location.Country, "test-country")
-	assert.Equal(t, location.State, "test-state")
+	assert.Equal(t, 0.1337, location.Latitude)
+	assert.Equal(t, -1337.0, location.Longitude)
+	assert.Equal(t, "test-country", location.Country)
+	assert.Equal(t, "test-state", location.State)
 
 	assert.NoError(t, err)
 }

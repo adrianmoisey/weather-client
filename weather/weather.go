@@ -19,7 +19,7 @@ type WeatherClient struct {
 
 type WeatherConfig struct {
 	ApiKey string
-	Units  string "metric"
+	Units  string "metric" // This isn't setting a default
 }
 
 func NewClient(config WeatherConfig) (*WeatherClient, error) {
@@ -27,6 +27,10 @@ func NewClient(config WeatherConfig) (*WeatherClient, error) {
 	if config.ApiKey == "" {
 		cause := errors.New(apiKeyNotSupplied)
 		return nil, errors.WithStack(cause)
+	}
+
+	if config.Units == "" {
+		config.Units = "metric"
 	}
 
 	c := &WeatherClient{

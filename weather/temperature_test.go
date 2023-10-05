@@ -19,8 +19,8 @@ func TestTemperature(t *testing.T) {
 
 	assert.NoError(t, err)
 
-	assert.Equal(t, temperature.Pressure, int32(9999))
-	assert.Equal(t, temperature.Temperature, 13.37)
+	assert.Equal(t, int32(9999), temperature.Pressure)
+	assert.Equal(t, 13.37, temperature.Temperature)
 }
 
 func TestTemperatureFail(t *testing.T) {

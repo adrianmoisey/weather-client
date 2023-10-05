@@ -33,7 +33,16 @@ func TestMain(m *testing.M) {
 }
 
 func TestNewClient(t *testing.T) {
-	assert.Equal(t, testClient.unit, "metric")
+	assert.Equal(t, "metric", testClient.unit)
+}
+
+func TestNewClientWithoutApiUnits(t *testing.T) {
+
+	config := WeatherConfig{ApiKey: "apikey"}
+	testClient, err := NewClient(config)
+
+	assert.Equal(t, "metric", testClient.unit)
+	assert.Nil(t, err)
 }
 
 func TestNewClientWithoutApiKey(t *testing.T) {
