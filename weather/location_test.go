@@ -9,7 +9,7 @@ import (
 
 func TestLocation(t *testing.T) {
 
-	httpmock.RegisterResponder("GET", locationURL+apiKey+"&q="+testCity,
+	httpmock.RegisterResponder("GET", locationURL+"q="+testCity+"&appid="+apiKey,
 		httpmock.NewStringResponder(200, `[{"lat": 0.1337, "lon": -1337.0, "country": "test-country", "state": "test-state"}]`))
 
 	location, err := testClient.FetchLatLonForCity(testCity)
@@ -24,7 +24,7 @@ func TestLocation(t *testing.T) {
 
 func TestLocationFail(t *testing.T) {
 
-	httpmock.RegisterResponder("GET", locationURL+apiKey+"&q="+testCity,
+	httpmock.RegisterResponder("GET", locationURL+"q="+testCity+"&appid="+apiKey,
 		httpmock.NewStringResponder(200, `[]`))
 
 	location, err := testClient.FetchLatLonForCity(testCity)

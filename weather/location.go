@@ -17,7 +17,7 @@ type Location struct {
 func (s *WeatherClient) FetchLatLonForCity(city string) (*Location, error) {
 	var locations []Location
 
-	url := locationURL + s.apiKey + "&q=" + city
+	url := locationURL + "q=" + city
 
 	// Resty
 	res, err := s.Fetch(url)

@@ -23,9 +23,10 @@ func (s *WeatherClient) FetchWeatherForCity(city string) (*WeatherConditions, er
 		return nil, err
 	}
 
+	units := fmt.Sprintf("units=%s", s.unit)
 	latlonURL := fmt.Sprintf("&lat=%v&lon=%v", location.Latitude, location.Longitude)
-	units := fmt.Sprintf("&units=%s", s.unit)
-	url := weatherURL + s.apiKey + units + latlonURL
+
+	url := weatherURL + units + latlonURL
 
 	res, err := s.Fetch(url)
 	if err != nil {

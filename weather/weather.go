@@ -8,8 +8,8 @@ import (
 )
 
 const (
-	locationURL = "https://api.openweathermap.org/geo/1.0/direct?limit=1&appid="
-	weatherURL  = "https://api.openweathermap.org/data/2.5/weather?appid="
+	locationURL = "https://api.openweathermap.org/geo/1.0/direct?limit=1&"
+	weatherURL  = "https://api.openweathermap.org/data/2.5/weather?"
 )
 
 type WeatherClient struct {
@@ -44,6 +44,8 @@ func NewClient(config WeatherConfig) (*WeatherClient, error) {
 }
 
 func (c *WeatherClient) Fetch(url string) ([]byte, error) {
+
+	url = url + "&appid=" + c.apiKey
 
 	resp, err := c.httpClient.R().
 		EnableTrace().
