@@ -1,6 +1,8 @@
 package weather
 
 import (
+	"net/http"
+
 	"github.com/go-resty/resty/v2"
 	"github.com/pkg/errors"
 )
@@ -51,10 +53,9 @@ func (c *WeatherClient) Fetch(url string) ([]byte, error) {
 		return nil, err
 	}
 
-	if resp.StatusCode() == 401 {
-		cause := errors.New(invalidAPIKey)
-		return nil, errors.WithStack(cause)
+	if resp.StatusCode() == http.StatusUnauthorized {
+		return nil, errors.New(invalidAPIKey)
 	}
 
-	return resp.Body(), err
+	return resp.Body(), nil
 }
