@@ -21,7 +21,7 @@ type WeatherClient struct {
 
 type WeatherConfig struct {
 	ApiKey string
-	Units  string "metric" // This isn't setting a default
+	Units  string
 }
 
 func NewClient(config WeatherConfig) (*WeatherClient, error) {
@@ -44,7 +44,6 @@ func NewClient(config WeatherConfig) (*WeatherClient, error) {
 }
 
 func (c *WeatherClient) Fetch(url string) ([]byte, error) {
-
 	url = url + "&appid=" + c.apiKey
 
 	resp, err := c.httpClient.R().
@@ -52,7 +51,7 @@ func (c *WeatherClient) Fetch(url string) ([]byte, error) {
 		Get(url)
 
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	if resp.StatusCode() == http.StatusUnauthorized {

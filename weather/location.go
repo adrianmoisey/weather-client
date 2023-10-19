@@ -19,15 +19,14 @@ func (s *WeatherClient) FetchLatLonForCity(city string) (*Location, error) {
 
 	url := locationURL + "q=" + city
 
-	// Resty
 	res, err := s.Fetch(url)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	err = json.Unmarshal(res, &locations)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	if len(locations) == 0 {

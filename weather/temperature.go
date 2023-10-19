@@ -3,10 +3,12 @@ package weather
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/pkg/errors"
 )
 
 type Weather struct {
-	Main WeatherConditions `json:"main"`
+	WeatherConditions WeatherConditions `json:"main"`
 }
 
 type WeatherConditions struct {
@@ -17,10 +19,9 @@ type WeatherConditions struct {
 func (s *WeatherClient) FetchWeatherForCity(city string) (*WeatherConditions, error) {
 	var weather Weather
 
-	// Fetch the Latitide and Longitide for city
 	location, err := s.FetchLatLonForCity(city)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
 	units := fmt.Sprintf("units=%s", s.unit)
@@ -28,18 +29,15 @@ func (s *WeatherClient) FetchWeatherForCity(city string) (*WeatherConditions, er
 
 	url := weatherURL + units + latlonURL
 
-	res, err := s.Fetch(url)
+	resp, err := s.Fetch(url)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
-	err = json.Unmarshal(res, &weather)
+	err = json.Unmarshal(resp, &weather)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
-	// This weather.Main stuff is weird, is there a better way to handle it?
-	main := &weather.Main
-
-	return main, nil
+	return &weather.WeatherConditions, nil
 }

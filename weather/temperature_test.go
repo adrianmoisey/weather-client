@@ -23,7 +23,7 @@ func TestTemperature(t *testing.T) {
 	assert.Equal(t, 13.37, temperature.Temperature)
 }
 
-func TestTemperatureFail(t *testing.T) {
+func TestTemperature_Fail(t *testing.T) {
 
 	httpmock.RegisterResponder("GET", locationURL+"q="+testCity+"&appid="+apiKey,
 		httpmock.NewStringResponder(200, `[]`))
@@ -34,7 +34,7 @@ func TestTemperatureFail(t *testing.T) {
 	assert.EqualError(t, err, errorNoCityFound)
 }
 
-func TestTemperatureFailApiKey(t *testing.T) {
+func TestTemperature_FailApiKey(t *testing.T) {
 
 	httpmock.RegisterResponder("GET", locationURL+"q="+testCity+"&appid="+apiKey,
 		httpmock.NewStringResponder(401, `{"cod":401, "message": "Invalid API key. Please see https://openweathermap.org/faq#error401 for more info."}`))
