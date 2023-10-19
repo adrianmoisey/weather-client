@@ -3,12 +3,12 @@ package weather
 import (
 	"encoding/json"
 	"fmt"
+
+	"github.com/pkg/errors"
 )
 
-type TemperatureService service
-
 type Weather struct {
-	Main WeatherConditions `json:"main"`
+	WeatherConditions WeatherConditions `json:"main"`
 }
 
 type WeatherConditions struct {
@@ -16,31 +16,28 @@ type WeatherConditions struct {
 	Pressure    int32   `json:"pressure"`
 }
 
-func (s *TemperatureService) FetchWeatherForCity(city string) (*WeatherConditions, error) {
+func (s *WeatherClient) FetchWeatherForCity(city string) (*WeatherConditions, error) {
 	var weather Weather
 
-	// Fetch the Latitide and Longitide for city
-	location, err := s.client.Location.FetchLatLonForCity(city)
+	location, err := s.FetchLatLonForCity(city)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
+	units := fmt.Sprintf("units=%s", s.unit)
 	latlonURL := fmt.Sprintf("&lat=%v&lon=%v", location.Latitude, location.Longitude)
-	units := fmt.Sprintf("&units=%s", s.client.unit)
-	url := weatherURL + s.client.apiKey + units + latlonURL
 
-	res, err := s.client.NewRequest(url)
+	url := weatherURL + units + latlonURL
+
+	resp, err := s.Fetch(url)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
-	err = json.Unmarshal(res, &weather)
+	err = json.Unmarshal(resp, &weather)
 	if err != nil {
-		return nil, err
+		return nil, errors.WithStack(err)
 	}
 
-	// This weather.Main stuff is weird, is there a better way to handle it?
-	main := &weather.Main
-
-	return main, nil
+	return &weather.WeatherConditions, nil
 }
